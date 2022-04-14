@@ -21,13 +21,13 @@ class Database {
 		statement = connection.createStatement();
 	}
 	
-	boolean insertInDBIfNewEpisode() throws SQLException{
+	boolean insertInDBIfNewEpisode() throws SQLException {
 		
 		ResultSet resultSetFromNewEpisode = statement.executeQuery("SELECT * FROM EPISODE ORDER BY ID DESC LIMIT 0, 1;");
 		
-		Episode episode = new Episode();
-		
 		while (resultSetFromNewEpisode.next()) {
+			
+			Episode episode = new Episode();
 			
 			int idEpisode = resultSetFromNewEpisode.getInt(1);
 			logger.debug("idEpisode: " + idEpisode);
@@ -56,7 +56,6 @@ class Database {
 			String dateEpisode = resultSetFromNewEpisode.getString(7);
 			logger.debug("dateEpisode: " + dateEpisode);
 			episode.setDate(dateEpisode);
-			
 			
 			boolean isItOnTable = isEpisodeOnTable(uuidEpisode);
 			
