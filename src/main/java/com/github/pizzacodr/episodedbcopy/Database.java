@@ -30,31 +30,31 @@ class Database {
 			Episode episode = new Episode();
 			
 			int idEpisode = resultSetFromNewEpisode.getInt(1);
-			logger.debug("idEpisode: " + idEpisode);
+			logger.debug("idEpisode: {}", idEpisode);
 			episode.setId(idEpisode);
 			
 			String uuidEpisode = resultSetFromNewEpisode.getString(2);
-			logger.debug("uuidEpisode: " + uuidEpisode);
+			logger.debug("uuidEpisode: {}", uuidEpisode);
 			episode.setUuid(uuidEpisode);
 			
 			String titleEpisode = resultSetFromNewEpisode.getString(3);
-			logger.debug("titleEpisode: " + titleEpisode);
+			logger.debug("titleEpisode: {}", titleEpisode);
 			episode.setTitle(titleEpisode);
 			
 			String linkEpisode = resultSetFromNewEpisode.getString(4);
-			logger.debug("linkEpisode: " + linkEpisode);
+			logger.debug("linkEpisode: {}", linkEpisode);
 			episode.setLink(linkEpisode);
 			
 			String contentEpisode = resultSetFromNewEpisode.getString(5);
-			logger.debug("contentEpisode: " + contentEpisode);
+			logger.debug("contentEpisode: {}", contentEpisode);
 			episode.setContent(contentEpisode);
 			
 			String sharelinkEpisode = resultSetFromNewEpisode.getString(6);
-			logger.debug("sharelinkEpisode: " + sharelinkEpisode);
+			logger.debug("sharelinkEpisode: {}", sharelinkEpisode);
 			episode.setShareLink(sharelinkEpisode);
 			
 			String dateEpisode = resultSetFromNewEpisode.getString(7);
-			logger.debug("dateEpisode: " + dateEpisode);
+			logger.debug("dateEpisode: {}", dateEpisode);
 			episode.setDate(dateEpisode);
 			
 			boolean isItOnTable = isEpisodeOnTable(uuidEpisode);
@@ -74,12 +74,13 @@ class Database {
 
 	private void insertIntoTable(Episode episode) throws SQLException {
 		
-		PreparedStatement prepStm = connection.prepareStatement("INSERT INTO MASTODON VALUES(NULL, ?, ?, ?, ?);");
-		prepStm.setString(1, episode.getUuid());
-		prepStm.setString(2, episode.getTitle() + "\n" + episode.getContent());
-		prepStm.setString(3, episode.getShareLink());
-		prepStm.setInt(4, 0);
-		prepStm.executeUpdate();
+		try (PreparedStatement prepStm = connection.prepareStatement("INSERT INTO MASTODON VALUES(NULL, ?, ?, ?, ?);")){
+			prepStm.setString(1, episode.getUuid());
+			prepStm.setString(2, episode.getTitle() + "\n" + episode.getContent());
+			prepStm.setString(3, episode.getShareLink());
+			prepStm.setInt(4, 0);
+			prepStm.executeUpdate();
+		}
 	}
 	
 	private boolean isEpisodeOnTable(String uuidEpisode) throws SQLException {
@@ -91,7 +92,7 @@ class Database {
 			fetchSize = rsMastodon.getInt(1);
         }
 		
-		logger.debug("fetchSize: " + fetchSize);
+		logger.debug("fetchSize: {}", fetchSize);
 		return fetchSize != 0;
 	}
 }
