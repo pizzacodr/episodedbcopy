@@ -3,8 +3,8 @@ package com.github.pizzacodr.episodedbcopy;
 import org.aeonbits.owner.Config;
 import org.aeonbits.owner.Config.Sources;
 
-@Sources({ "file:${user.dir}/episodeDBCopy.properties", 
-"file:${user.home}/episodeDBCopy.properties"})
+@Sources({ "file:${user.dir}/episodedbcopy.properties", 
+"file:${user.home}/episodedbcopy.properties"})
 
  interface ConfigFile extends Config {
 
