@@ -10,4 +10,7 @@ import org.aeonbits.owner.Config.Sources;
 
 	@DefaultValue("jdbc:sqlite:${user.home}/podbean.sqlite")
 	String dbFileLocation();
+	
+	@DefaultValue("MASTODON")
+	String tableName();
 }

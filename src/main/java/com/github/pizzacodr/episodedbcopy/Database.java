@@ -15,10 +15,18 @@ class Database {
 	private static Logger logger = LoggerFactory.getLogger(Database.class);
 	private Connection connection;
 	private Statement statement;
+	private String tableName;
 	
-	Database(String dbFileLocation) throws SQLException {
+	Database(String dbFileLocation, String tableName) throws SQLException {
 		connection = DriverManager.getConnection(dbFileLocation);
 		statement = connection.createStatement();
+		
+		this.tableName = tableName;
+		
+		try (Statement statementCreateTable = connection.createStatement()) {
+	        statementCreateTable.executeUpdate("CREATE TABLE IF NOT EXISTS " + tableName + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, "
+	        		+ "UUID TEXT NOT NULL, CONTENT TEXT NOT NULL, SHARELINK TEXT, POSTED TEXT);");
+		}
 	}
 	
 	boolean insertInDBIfNewEpisode() throws SQLException {
@@ -74,7 +82,7 @@ class Database {
 
 	private void insertIntoTable(Episode episode) throws SQLException {
 		
-		try (PreparedStatement prepStm = connection.prepareStatement("INSERT INTO MASTODON VALUES(NULL, ?, ?, ?, ?);")){
+		try (PreparedStatement prepStm = connection.prepareStatement("INSERT INTO " + tableName + " VALUES(NULL, ?, ?, ?, ?);")) {
 			prepStm.setString(1, episode.getUuid());
 			prepStm.setString(2, episode.getTitle() + "\n" + episode.getContent());
 			prepStm.setString(3, episode.getShareLink());
@@ -85,16 +93,11 @@ class Database {
 	
 	private boolean isEpisodeOnTable(String uuidEpisode) throws SQLException {
 		
-		try (Statement statement = connection.createStatement()) {
-	        statement.executeUpdate("CREATE TABLE IF NOT EXISTS MASTODON (ID INTEGER PRIMARY KEY AUTOINCREMENT, "
-	        		+ "UUID TEXT NOT NULL, CONTENT TEXT NOT NULL, SHARELINK TEXT, POSTED TEXT);");
-		}
-		
-		ResultSet rsMastodon = statement.executeQuery("SELECT COUNT(*) FROM MASTODON WHERE UUID = '" + uuidEpisode + "';");
+		ResultSet rsTableName = statement.executeQuery("SELECT COUNT(*) FROM " + tableName + " WHERE UUID = '" + uuidEpisode + "';");
 		
 		int fetchSize = 0;
-		while (rsMastodon.next()) {
-			fetchSize = rsMastodon.getInt(1);
+		while (rsTableName.next()) {
+			fetchSize = rsTableName.getInt(1);
         }
 		
 		logger.debug("fetchSize: {}", fetchSize);

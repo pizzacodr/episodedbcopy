@@ -9,7 +9,7 @@ public class App {
 	public static void main(String[] args) throws SQLException {	
 		
 		ConfigFile configFile = ConfigFactory.create(ConfigFile.class, System.getProperties());
-		Database database = new Database(configFile.dbFileLocation());
+		Database database = new Database(configFile.dbFileLocation(), configFile.tableName());
 		database.insertInDBIfNewEpisode();
 	}
 }
