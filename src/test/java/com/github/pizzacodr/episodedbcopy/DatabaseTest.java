@@ -26,7 +26,7 @@ class DatabaseTest {
 	void testDatabase(){
 		assertThrows(SQLException.class,
                 ()->{
-                new Database("wrongPath");
+                new Database("wrongPath", "MASTODON");
                 });
 	}
 
@@ -48,7 +48,7 @@ class DatabaseTest {
         String connectionString = "jdbc:sqlite:" + destFile.getAbsolutePath();
         logger.debug("Connection String: " + connectionString);
 		
-        Database database = new Database(connectionString);
+        Database database = new Database(connectionString, "MASTODON");
 		database.insertInDBIfNewEpisode();
 		
 		Connection connection = DriverManager.getConnection(connectionString);
