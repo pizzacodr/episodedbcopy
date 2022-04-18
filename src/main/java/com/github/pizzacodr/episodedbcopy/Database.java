@@ -74,6 +74,11 @@ class Database {
 
 	private void insertIntoTable(Episode episode) throws SQLException {
 		
+		try (Statement statement = connection.createStatement()) {
+	        statement.executeUpdate("CREATE TABLE IF NOT EXISTS MASTODON (ID INTEGER PRIMARY KEY AUTOINCREMENT, "
+	        		+ "UUID TEXT NOT NULL, CONTENT TEXT NOT NULL, SHARELINK TEXT, POSTED TEXT);");
+		}
+		
 		try (PreparedStatement prepStm = connection.prepareStatement("INSERT INTO MASTODON VALUES(NULL, ?, ?, ?, ?);")){
 			prepStm.setString(1, episode.getUuid());
 			prepStm.setString(2, episode.getTitle() + "\n" + episode.getContent());
