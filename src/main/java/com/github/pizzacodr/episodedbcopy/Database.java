@@ -31,7 +31,7 @@ class Database {
 	
 	boolean insertInDBIfNewEpisode() throws SQLException {
 		
-		ResultSet resultSetFromNewEpisode = statement.executeQuery("SELECT * FROM EPISODE ORDER BY ID DESC LIMIT 0, 1;");
+		ResultSet resultSetFromNewEpisode = statement.executeQuery("SELECT * FROM EPISODE ORDER BY ID DESC;");
 		
 		while (resultSetFromNewEpisode.next()) {
 			
