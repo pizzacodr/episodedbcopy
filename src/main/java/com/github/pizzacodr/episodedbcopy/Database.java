@@ -32,7 +32,7 @@ class Database {
 	boolean insertInDBIfNewEpisode() throws SQLException {
 		
 		ResultSet resultSetFromNewEpisode = statement.executeQuery("SELECT * FROM EPISODE ORDER BY ID DESC;");
-		
+
 		while (resultSetFromNewEpisode.next()) {
 			
 			Episode episode = new Episode();
@@ -65,9 +65,7 @@ class Database {
 			logger.debug("dateEpisode: {}", dateEpisode);
 			episode.setDate(dateEpisode);
 			
-			boolean isItOnTable = isEpisodeOnTable(uuidEpisode);
-			
-			if (!isItOnTable) {
+			if (!isEpisodeOnTable(uuidEpisode)) {
 			
 				insertIntoTable(episode);
 				logger.debug("New content inserted");
@@ -93,7 +91,9 @@ class Database {
 	
 	private boolean isEpisodeOnTable(String uuidEpisode) throws SQLException {
 		
-		ResultSet rsTableName = statement.executeQuery("SELECT COUNT(*) FROM " + tableName + " WHERE UUID = '" + uuidEpisode + "';");
+		Statement statementIsOnTheTable = connection.createStatement();
+		
+		ResultSet rsTableName = statementIsOnTheTable.executeQuery("SELECT COUNT(*) FROM " + tableName + " WHERE UUID = '" + uuidEpisode + "';");
 		
 		int fetchSize = 0;
 		while (rsTableName.next()) {
@@ -101,6 +101,7 @@ class Database {
         }
 		
 		logger.debug("fetchSize: {}", fetchSize);
+		statementIsOnTheTable.close();
 		return fetchSize != 0;
 	}
 }
